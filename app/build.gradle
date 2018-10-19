@@ -40,6 +40,7 @@ dependencies {
 
 //    implementation 'com.karumi:dexter:4.2.0'
 //    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.karumi:dexter:5.0.0'
 
     implementation 'com.google.android.gms:play-services:11.4.0'
 

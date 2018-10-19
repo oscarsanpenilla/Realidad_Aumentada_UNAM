@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.R.attr.fragment
 import android.net.Uri
 import android.support.v7.app.AlertDialog
+import android.widget.Toast
 
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.core.Anchor
@@ -25,16 +26,15 @@ import com.google.ar.sceneform.ux.TransformableNode
 import com.google.ar.sceneform.rendering.Renderable
 
 
-
-
-
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var fragment: ArFragment
     private val pointer = PointerDrawable()
     private var isTracking: Boolean = false
     private var isHitting: Boolean = false
+    private lateinit var location:Location
+    private lateinit var lugar:Lugar
+    private lateinit var lugares :ArrayList<Lugar>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +48,14 @@ class MainActivity : AppCompatActivity() {
             onUpdate()
         }
         initializeGallery();
+
+        location = Location(this)
+        location.permisoLocation {
+            location.obtenerUbicacion { toast("funciona ${location.position?.latitude}") }
+        }
+        lugar = Lugar()
+        lugar.getLugares()
+        lugares = lugar.lugares
     }
 
     private fun onUpdate() {
@@ -169,6 +177,19 @@ class MainActivity : AppCompatActivity() {
         node.setParent(anchorNode)
         fragment.arSceneView.scene.addChild(anchorNode)
         node.select()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        location.detenerActualizacionUbicacion()
+
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        location.permisoLocation { location.obtenerUbicacion { toast("funciona reinicio") } }
+
     }
 
 }
