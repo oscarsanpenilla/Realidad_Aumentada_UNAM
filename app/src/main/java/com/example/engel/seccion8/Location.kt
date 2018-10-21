@@ -2,6 +2,7 @@ package com.example.engel.seccion8
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.support.v7.app.AppCompatActivity
 
 import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -18,16 +19,24 @@ import com.karumi.dexter.listener.single.PermissionListener
 
 
 
-class Location(var activity: Activity){
+//var activity: Activity
+open class Location(){
 
-    private var fusedLocationProviderClient: FusedLocationProviderClient
+
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var locationRequest:LocationRequest
-    var callback:LocationCallback? = null
+    private var callback:LocationCallback? = null
     var position:LatLng? = null
+    lateinit var activity:Activity
 
     init {
-        this.fusedLocationProviderClient = FusedLocationProviderClient(activity)
+
         configLocationRequest()
+    }
+
+    fun configFusedLocationProviderClient(){
+        this.fusedLocationProviderClient = FusedLocationProviderClient(activity)
     }
 
     fun configLocationRequest(){
@@ -46,7 +55,7 @@ class Location(var activity: Activity){
                     }
 
                     override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-                        Toast.makeText(activity,"Sin Permisos de Ubicacion",Toast.LENGTH_SHORT).show()
+                        activity.toast("Se necesitan permisos de Localizacion")
                     }
 
                     override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) {
@@ -63,13 +72,14 @@ class Location(var activity: Activity){
     }
 
     @SuppressLint("MissingPermission")
-    fun obtenerUbicacion(funtion:()->Unit) {
+    fun onLocationUpdate(funtion:()->Unit) {
         // obtenemos ultima ubicacion
         callback = object : LocationCallback(){
             override fun onLocationResult(locationResult: LocationResult?) {
                 super.onLocationResult(locationResult)
                 for (ubicacion in locationResult?.locations!!){
                     position = LatLng(ubicacion.latitude,ubicacion.longitude)
+
                 }
                 funtion()
             }
@@ -77,5 +87,45 @@ class Location(var activity: Activity){
         fusedLocationProviderClient.requestLocationUpdates(locationRequest,callback,null)
 
     }
+
+
+    // Calculos
+    fun calcDistance(lugar:Lugar,location: LatLng = this.position!!): Double {
+
+        val earthRadius = 6378.0
+        val dLat = Math.toRadians(lugar.latitude - location.latitude)
+        val dLon = Math.toRadians(lugar.longitude - location.longitude)
+        val a = Math.pow(Math.sin(dLat / 2), 2.0) + Math.cos(lugar.latitude) * Math.cos(location.latitude) * Math.pow(Math.sin(dLon / 2), 2.0)
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        val distUserPlace = earthRadius * c * 1000.0
+
+        return distUserPlace
+    }
+
+    fun closestPlace(places: ArrayList<Lugar>, location: LatLng = this.position!!): Lugar {
+        var k = 0
+        var actualDist: Double
+        var prevDist: Double
+        var lugar:Lugar
+
+        for (i in 1 until places.size) {
+            actualDist = calcDistance(places[i])
+            prevDist = calcDistance(places[k])
+            if (prevDist >= actualDist) {
+                k = i
+            }
+
+        }
+        lugar =  places[k]
+        if (calcDistance(lugar) <= lugar.radio){
+            lugar.isOnPlace = true
+        }
+
+        return lugar
+    }
+
+
+
+
 
 }

@@ -3,27 +3,22 @@ package com.example.engel.seccion8
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.google.ar.sceneform.ux.ArFragment
-import android.R.attr.fragment
 import android.view.View
 import com.google.ar.core.TrackingState
-import android.R.attr.fragment
-import com.google.ar.core.Trackable
 import com.google.ar.core.HitResult
-import android.R.attr.fragment
 import com.google.ar.core.Plane
-import android.support.v4.view.MenuItemCompat.setContentDescription
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.R.attr.fragment
 import android.net.Uri
 import android.support.v7.app.AlertDialog
-import android.widget.Toast
+
 
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.core.Anchor
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.ux.TransformableNode
 import com.google.ar.sceneform.rendering.Renderable
+import kotlinx.android.synthetic.main.layout_lugares.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -49,14 +44,48 @@ class MainActivity : AppCompatActivity() {
         }
         initializeGallery();
 
-        location = Location(this)
+        location = Location()
+        location.activity = this
+        location.configFusedLocationProviderClient()
         location.permisoLocation {
-            location.obtenerUbicacion { toast("funciona ${location.position?.latitude}") }
+            location.onLocationUpdate {
+
+            main()
+
+            }
         }
         lugar = Lugar()
         lugar.getLugares()
         lugares = lugar.lugares
     }
+    override fun onRestart() {
+        super.onRestart()
+        location.permisoLocation {
+            location.onLocationUpdate { main() }
+        }
+
+    }
+
+    private fun main(){
+        updateLugaresRelativeLayout()
+        var lugarMasCercano = getLugarMasCercano()
+        toast("${location.calcDistance(lugarMasCercano)}")
+    }
+
+    private fun getLugarMasCercano():Lugar = location.closestPlace(lugares)
+    private fun updateLugaresRelativeLayout(){
+        var lugarMasCercano = location.closestPlace(lugares)
+        if (lugarMasCercano.isOnPlace){
+            text_view_nombre.text = getLugarMasCercano().name
+            image_view_lugar.visibility = View.VISIBLE
+            text_view_info.visibility = View.VISIBLE
+        }else {
+            text_view_nombre.text = "Lugar mas cercano ${getLugarMasCercano().name}"
+            image_view_lugar.visibility = View.INVISIBLE
+            text_view_info.visibility = View.INVISIBLE
+        }
+    }
+
 
     private fun onUpdate() {
         val trackingChanged = updateTracking()
@@ -186,10 +215,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        location.permisoLocation { location.obtenerUbicacion { toast("funciona reinicio") } }
 
-    }
 
 }
