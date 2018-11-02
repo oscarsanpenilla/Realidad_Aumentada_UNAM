@@ -37,6 +37,7 @@
     file: 'sampledata/models/andy.obj',
     name: 'andy',
     recenter: 'root',
+    scale: 0.5
   },
   samplers: [
     {

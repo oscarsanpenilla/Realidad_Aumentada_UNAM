@@ -13,6 +13,7 @@ class CustomArFragment: ArFragment() {
 
         var config:Config = Config(session)
         config.setUpdateMode(Config.UpdateMode.LATEST_CAMERA_IMAGE)
+        config.setFocusMode(Config.FocusMode.AUTO)
         session.configure(config)
         this.getArSceneView().setupSession(session)
 

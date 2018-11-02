@@ -24,8 +24,7 @@ import java.io.IOException
 import com.google.ar.core.TrackingState
 import com.google.ar.core.AugmentedImage
 import com.google.ar.sceneform.FrameTime
-
-
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 @Suppress("DEPRECATION")
@@ -38,10 +37,24 @@ class MainActivity : AppCompatActivity() {
     private lateinit var lugar:Lugar
     private lateinit var lugares :ArrayList<Lugar>
 
+    private lateinit var lugarMasCercano:Lugar
+    private lateinit var anchor: Anchor
+    private var index:Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+
+
+        button_sig.setOnClickListener {
+            toast("btn funciona ${index}")
+            shouldAddModel = true
+            anchor.detach()
+            if (index < lugarMasCercano.sitiosInteres.size - 1) index++
+            else index = 0
+
+        }
 
         fragment = getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment) as CustomArFragment
         fragment.getPlaneDiscoveryController().hide()
@@ -61,8 +74,35 @@ class MainActivity : AppCompatActivity() {
         lugar = Lugar()
         lugar.getLugares()
         lugares = lugar.lugares
+
+    }
+    private fun main(){
+        updateLugaresRelativeLayout()
+        updateGalleryLayout()
+        //toast("${lugarMasCercano.sitiosInteres[0].nombre  }")
     }
 
+    private fun updateGalleryLayout(){
+
+    }
+
+    private fun delateAnchor(){
+
+    }
+
+    private fun getLugarMasCercano():Lugar = location.closestPlace(lugares)
+    private fun updateLugaresRelativeLayout(){
+        lugarMasCercano = location.closestPlace(lugares)
+        if (lugarMasCercano.isOnPlace){
+            text_view_nombre.text = getLugarMasCercano().name
+            image_view_lugar.visibility = View.VISIBLE
+            text_view_info.visibility = View.VISIBLE
+        }else {
+            text_view_nombre.text = "Lugar mas cercano ${getLugarMasCercano().name}"
+            image_view_lugar.visibility = View.INVISIBLE
+            text_view_info.visibility = View.INVISIBLE
+        }
+    }
 
     private fun placeObject(fragment: ArFragment, anchor: Anchor, model: Uri) {
         ModelRenderable.builder()
@@ -120,10 +160,15 @@ class MainActivity : AppCompatActivity() {
             if (augmentedImage.getTrackingState() == TrackingState.TRACKING) {
 
                 if (augmentedImage.getName() == "metrobus" && shouldAddModel) {
+                    if (index >= lugarMasCercano.sitiosInteres.size) index=0
+                    anchor = augmentedImage.createAnchor(augmentedImage.getCenterPose())
+
                     placeObject(fragment,
-                            augmentedImage.createAnchor(augmentedImage.getCenterPose()),
-                            Uri.parse("andy.sfb"))
+                            anchor,
+                            Uri.parse(lugarMasCercano.sitiosInteres[index].modelo))
                     shouldAddModel = false
+
+
                 }
             }
         }
@@ -139,25 +184,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun main(){
-        updateLugaresRelativeLayout()
-        var lugarMasCercano = getLugarMasCercano()
-        toast("${location.calcDistance(lugarMasCercano)}")
-    }
 
-    private fun getLugarMasCercano():Lugar = location.closestPlace(lugares)
-    private fun updateLugaresRelativeLayout(){
-        var lugarMasCercano = location.closestPlace(lugares)
-        if (lugarMasCercano.isOnPlace){
-            text_view_nombre.text = getLugarMasCercano().name
-            image_view_lugar.visibility = View.VISIBLE
-            text_view_info.visibility = View.VISIBLE
-        }else {
-            text_view_nombre.text = "Lugar mas cercano ${getLugarMasCercano().name}"
-            image_view_lugar.visibility = View.INVISIBLE
-            text_view_info.visibility = View.INVISIBLE
-        }
-    }
+
+
 
 
 
