@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.google.ar.sceneform.ux.ArFragment
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.net.Uri
 import android.support.v7.app.AlertDialog
 
@@ -17,7 +16,6 @@ import com.google.ar.sceneform.rendering.Renderable
 import kotlinx.android.synthetic.main.layout_lugares.*
 import android.graphics.Bitmap
 import com.google.ar.core.*
-import com.google.a.b.a.a.a.e
 import android.graphics.BitmapFactory
 import android.util.Log
 import java.io.IOException
@@ -34,11 +32,10 @@ class MainActivity : AppCompatActivity() {
     private var shouldAddModel = true
 
     private lateinit var location:Location
-    private lateinit var lugar:Lugar
     private lateinit var lugares :ArrayList<Lugar>
 
     private lateinit var lugarMasCercano:Lugar
-    private lateinit var anchor: Anchor
+    private var anchor: Anchor? = null
     private var index:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,9 +45,9 @@ class MainActivity : AppCompatActivity() {
 
 
         button_sig.setOnClickListener {
-            toast("btn funciona ${index}")
+            toast("Detectando Nuevamente la Tarjeta...")
             shouldAddModel = true
-            anchor.detach()
+            anchor?.detach()
             if (index < lugarMasCercano.sitiosInteres.size - 1) index++
             else index = 0
 
@@ -71,35 +68,46 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
-        lugar = Lugar()
-        lugar.getLugares()
-        lugares = lugar.lugares
+
+        lugares = Lugar().getLugares()
 
     }
     private fun main(){
+        for (lugar in lugares)lugar.isOnPlace = false
+        getLugarMasCercano()
         updateLugaresRelativeLayout()
         updateGalleryLayout()
-        //toast("${lugarMasCercano.sitiosInteres[0].nombre  }")
+
     }
 
     private fun updateGalleryLayout(){
+        gallery_layout.removeAllViews()
+        if (lugarMasCercano.isOnPlace) {
+            for (sitioDeInteres in lugarMasCercano.sitiosInteres) {
+                var modelo1 = ImageView(this)
+                modelo1.setImageResource(sitioDeInteres.thumb)
+                modelo1.setContentDescription(sitioDeInteres.nombre)
+                gallery_layout.addView(modelo1)
+            }
+        }else gallery_layout.removeAllViews()
 
     }
 
-    private fun delateAnchor(){
 
-    }
 
-    private fun getLugarMasCercano():Lugar = location.closestPlace(lugares)
+    private fun getLugarMasCercano() {lugarMasCercano = location.closestPlace(lugares)}
     private fun updateLugaresRelativeLayout(){
-        lugarMasCercano = location.closestPlace(lugares)
         if (lugarMasCercano.isOnPlace){
-            text_view_nombre.text = getLugarMasCercano().name
+            image_view_lugar.setImageResource(R.drawable.ic_location)
+            text_view_nombre.text = lugarMasCercano.name
             image_view_lugar.visibility = View.VISIBLE
             text_view_info.visibility = View.VISIBLE
+            if (!shouldAddModel) text_view_info.text = lugarMasCercano.sitiosInteres[index].nombre
+            else text_view_info.text = "Enfoca la tarjeta de Metrobus"
+
         }else {
-            text_view_nombre.text = "Lugar mas cercano ${getLugarMasCercano().name}"
-            image_view_lugar.visibility = View.INVISIBLE
+            text_view_nombre.text = "Lugar mas cercano ${lugarMasCercano.name}"
+            image_view_lugar.setImageResource(R.drawable.ic_location_off)
             text_view_info.visibility = View.INVISIBLE
         }
     }
@@ -127,6 +135,7 @@ class MainActivity : AppCompatActivity() {
         node.setParent(anchorNode)
         fragment.arSceneView.scene.addChild(anchorNode)
         node.select()
+
     }
 
     fun setupAugmentedImageDb(config: Config, session: Session): Boolean {
@@ -151,6 +160,8 @@ class MainActivity : AppCompatActivity() {
         return null
     }
 
+
+
     private fun onUpdateFrame(frameTime: FrameTime) {
         val frame = fragment.getArSceneView().getArFrame()
 
@@ -159,14 +170,19 @@ class MainActivity : AppCompatActivity() {
         for (augmentedImage in augmentedImages) {
             if (augmentedImage.getTrackingState() == TrackingState.TRACKING) {
 
+
                 if (augmentedImage.getName() == "metrobus" && shouldAddModel) {
                     if (index >= lugarMasCercano.sitiosInteres.size) index=0
-                    anchor = augmentedImage.createAnchor(augmentedImage.getCenterPose())
+                    if (lugarMasCercano.isOnPlace){
+                        anchor = augmentedImage.createAnchor(augmentedImage.getCenterPose())
+                        placeObject(fragment,
+                                anchor!!,
+                                Uri.parse(lugarMasCercano.sitiosInteres[index].modelo))
+                        shouldAddModel = false
+                        updateLugaresRelativeLayout()
 
-                    placeObject(fragment,
-                            anchor,
-                            Uri.parse(lugarMasCercano.sitiosInteres[index].modelo))
-                    shouldAddModel = false
+                    }else toast("Tarjeta Dectectada... Pero no estas en un sitio de interes")
+
 
 
                 }
@@ -181,6 +197,8 @@ class MainActivity : AppCompatActivity() {
         location.permisoLocation {
             location.onLocationUpdate { main() }
         }
+        fragment.arSceneView.resume()
+
 
     }
 
@@ -196,6 +214,7 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
 
         location.detenerActualizacionUbicacion()
+        fragment.arSceneView.pause()
 
     }
 

@@ -18,6 +18,7 @@
 
         <TextView
             android:id="@+id/text_view_nombre"
+            android:textSize="18dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/image_view_lugar"
@@ -36,7 +37,7 @@
             android:layout_alignBottom="@+id/image_view_lugar"
             android:layout_marginStart="-1dp"
             android:layout_marginLeft="19dp"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="3dp"
             android:layout_marginBottom="1dp"
             android:layout_toRightOf="@id/image_view_lugar"
             android:text="Infomacion" />

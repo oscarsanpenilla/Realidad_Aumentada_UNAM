@@ -106,22 +106,17 @@ open class Location(){
         var k = 0
         var actualDist: Double
         var prevDist: Double
-        var lugar:Lugar
 
         for (i in 1 until places.size) {
+            places[i].isOnPlace = false
             actualDist = calcDistance(places[i])
             prevDist = calcDistance(places[k])
-            if (prevDist >= actualDist) {
-                k = i
-            }
-
-        }
-        lugar =  places[k]
-        if (calcDistance(lugar) <= lugar.radio){
-            lugar.isOnPlace = true
+            if (prevDist >= actualDist) k = i
         }
 
-        return lugar
+        if (calcDistance(places[k]) <= places[k].radio) places[k].isOnPlace = true
+
+        return places[k]
     }
 
 
