@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+
         fragment = getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment) as CustomArFragment
         fragment.getPlaneDiscoveryController().hide()
         fragment.getArSceneView().getScene().setOnUpdateListener(this::onUpdateFrame)
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         location.permisoLocation {
             location.onLocationUpdate {
 
-            main()
+                main()
 
             }
         }
@@ -140,19 +141,17 @@ class MainActivity : AppCompatActivity() {
 
     fun setupAugmentedImageDb(config: Config, session: Session): Boolean {
         val augmentedImageDatabase: AugmentedImageDatabase
-
-        val bitmap = loadAugmentedImage() ?: return false
-
         augmentedImageDatabase = AugmentedImageDatabase(session)
-        augmentedImageDatabase.addImage("metrobus", bitmap!!)
-
+        augmentedImageDatabase.addImage("metrobus-1", loadAugmentedImage("metrobus-1.png") ?: return false)
+        augmentedImageDatabase.addImage("metrobus-2", loadAugmentedImage("metrobus-2.png") ?: return false)
+        augmentedImageDatabase.addImage("metrobus-3", loadAugmentedImage("metrobus-3.PNG") ?: return false)
         config.setAugmentedImageDatabase(augmentedImageDatabase)
         return true
     }
 
-    private fun loadAugmentedImage(): Bitmap? {
+    private fun loadAugmentedImage(picture:String): Bitmap? {
         try {
-            assets.open("metrobus.png").use { `is` -> return BitmapFactory.decodeStream(`is`) }
+            assets.open(picture).use { `is` -> return BitmapFactory.decodeStream(`is`) }
         } catch (e: IOException) {
             Log.e("ImageLoad", "IO Exception while loading", e)
         }
@@ -170,8 +169,8 @@ class MainActivity : AppCompatActivity() {
         for (augmentedImage in augmentedImages) {
             if (augmentedImage.getTrackingState() == TrackingState.TRACKING) {
 
-
-                if (augmentedImage.getName() == "metrobus" && shouldAddModel) {
+                // ( augmentedImage.getName() == "metrobus" || augmentedImage.getName() == "metrobus-3" ) &&
+                if ( shouldAddModel) {
                     if (index >= lugarMasCercano.sitiosInteres.size) index=0
                     if (lugarMasCercano.isOnPlace){
                         anchor = augmentedImage.createAnchor(augmentedImage.getCenterPose())
@@ -198,24 +197,22 @@ class MainActivity : AppCompatActivity() {
             location.onLocationUpdate { main() }
         }
         fragment.arSceneView.resume()
+        fragment.getPlaneDiscoveryController().hide()
 
 
     }
-
-
-
-
-
-
-
-
 
     override fun onStop() {
         super.onStop()
 
         location.detenerActualizacionUbicacion()
-        fragment.arSceneView.pause()
 
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        fragment.arSceneView.pause()
     }
 
 

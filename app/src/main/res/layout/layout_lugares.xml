@@ -14,7 +14,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginRight="10dp"
-            android:src="@drawable/ic_location" />
+             />
 
         <TextView
             android:id="@+id/text_view_nombre"
@@ -26,7 +26,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="0dp"
             android:layout_toRightOf="@id/image_view_lugar"
-            android:text="Lugar" />
+            android:text="" />
 
         <TextView
             android:id="@+id/text_view_info"
@@ -40,7 +40,7 @@
             android:layout_marginTop="3dp"
             android:layout_marginBottom="1dp"
             android:layout_toRightOf="@id/image_view_lugar"
-            android:text="Infomacion" />
+            android:text="" />
 
 
     </RelativeLayout>
