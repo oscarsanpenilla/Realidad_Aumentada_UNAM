@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var lugares :ArrayList<Lugar>
 
     private lateinit var lugarMasCercano:Lugar
+    private lateinit var lugarPrevio:Lugar
     private var anchor: Anchor? = null
     private var index:Int = 0
 

@@ -62,3 +62,28 @@ sceneform.asset('sampledata/models/igloo.obj',
         'default',
         'sampledata/models/igloo.sfa',
         'src/main/assets/igloo')
+
+sceneform.asset('../../../Downloads/WinterScene_obj_cspkBmqAq8g_8yQB89vo-wn/WinterScene.obj',
+        'default',
+        '../../../Downloads/WinterScene_obj_cspkBmqAq8g_8yQB89vo-wn/WinterScene.sfa',
+        'src/main/assets/WinterScene')
+
+sceneform.asset('../../../Downloads/CUPIC_HOTEL_obj_3ZMq1s7B76q_9mX-_QHHRd3/CUPIC_HOTEL.obj',
+        'default',
+        '../../../Downloads/CUPIC_HOTEL_obj_3ZMq1s7B76q_9mX-_QHHRd3/CUPIC_HOTEL.sfa',
+        'src/main/assets/CUPIC_HOTEL')
+
+sceneform.asset('../../../Downloads/stadium/Ballpark.obj',
+        'default',
+        '../../../Downloads/stadium/Ballpark.sfa',
+        'src/main/assets/Ballpark')
+
+sceneform.asset('../../../Downloads/storage ship/model.obj',
+        'default',
+        '../../../Downloads/storage ship/model.sfa',
+        'src/main/assets/storage')
+
+sceneform.asset('../../../Downloads/Lighthouse singly_obj_0t2ZYRBsqX-_d6v3eGvAZ8h/Lighthouse singly.obj',
+        'default',
+        '../../../Downloads/Lighthouse singly_obj_0t2ZYRBsqX-_d6v3eGvAZ8h/Lighthouse singly.sfa',
+        'src/main/assets/Lighthouse')
