@@ -19,4 +19,4 @@ Crear una aplicación ecapaz de obtener la ubicación del usuario y mostrar una 
 
 
 # Video tutorial
-https://drive.google.com/file/d/1eNqdxMQFmDMW7pIwfOhshVc7FShONLLp/view?usp=sharing
+https://drive.google.com/file/d/1smMkvdB11c0TA5AuN8jnJS67pwD2bXZw/view?usp=sharing
