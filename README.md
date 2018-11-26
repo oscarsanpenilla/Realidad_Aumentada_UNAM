@@ -16,3 +16,7 @@ Crear una aplicación ecapaz de obtener la ubicación del usuario y mostrar una 
 *	El rendimiento de la aplicación es bueno, sin embargo, solo los dispositivos compatibles con ARcore pueden hacer uso de esta. Debido a que la realidad aumentada representa un uso considerable de recursos para el smartphone.
 *	El algoritmo de geolocalización funciona correctamente y no representa una carga considerable al procesamiento de la aplicación.
 *	ARcore permite escalar los modelos a diferentes tamaños para proporcionar al usuario diferentes niveles de inmersión dependiendo el tamaño que el usuario disponga para moverse generando una buena experiencia de usuario.
+
+
+# Video tutorial
+'https://drive.google.com/file/d/1eNqdxMQFmDMW7pIwfOhshVc7FShONLLp/view?usp=sharing'
