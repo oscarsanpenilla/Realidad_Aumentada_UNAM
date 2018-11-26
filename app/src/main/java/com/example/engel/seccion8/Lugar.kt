@@ -31,7 +31,7 @@ class Lugar(var latitude:Double = 0.0, var longitude:Double =0.0, var radio:Doub
         lugares[1].sitiosInteres.add(SitioInteres("Estadio Baseball","Ballpark.sfb",R.drawable.stadium))
         lugares.add(Lugar(19.331307, -99.186625,100.0,"Fac. Arquitectura", "info"))
         lugares[2].sitiosInteres = ArrayList()
-        lugares[2].sitiosInteres.add(SitioInteres("Hotel","CUPID_HOTEL.sfb",R.drawable.cupid_hotel_thumb))
+        lugares[2].sitiosInteres.add(SitioInteres("Hotel","CUPIC_HOTEL.sfb",R.drawable.cupid_hotel_thumb))
         lugares.add(Lugar(19.331251, -99.181449, 100.0,"Fac. Química", "info"))
         lugares[3].sitiosInteres = ArrayList()
         lugares[3].sitiosInteres.add(SitioInteres("Igloo","igloo.sfb",R.drawable.igloo_thumb))

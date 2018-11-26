@@ -1,0 +1,50 @@
+{
+  materials: [
+    {
+      name: 'lambert2SG',
+      parameters: [
+        {
+          baseColor: 'Lighthouse texture',
+        },
+        {
+          baseColorTint: [
+            1,
+            1,
+            1,
+            1,
+          ],
+        },
+        {
+          metallic: 0,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/obj_material.sfm',
+    },
+  ],
+  model: {
+    attributes: [
+      'Position',
+      'TexCoord',
+      'Orientation',
+    ],
+    collision: {},
+    file: 'sampledata/models/Lighthouse singly.obj',
+    name: 'Lighthouse singly',
+    recenter: 'root',
+    scale: 0.099538000000000001,
+  },
+  samplers: [
+    {
+      file: 'sampledata/models\\Lighthouse texture.png',
+      name: 'Lighthouse texture',
+      pipeline_name: 'Lighthouse texture.png',
+    },
+  ],
+  version: '0.52:1',
+}

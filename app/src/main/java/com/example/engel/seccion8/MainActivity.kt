@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var lugares :ArrayList<Lugar>
 
     private lateinit var lugarMasCercano:Lugar
-    private lateinit var lugarPrevio:Lugar
     private var anchor: Anchor? = null
     private var index:Int = 0
 
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
 
         button_sig.setOnClickListener {
-            toast("Detectando Nuevamente la Tarjeta...")
+            toast("Enfoca la tarjeta nuevamente.")
             shouldAddModel = true
             anchor?.detach()
             if (index < lugarMasCercano.sitiosInteres.size - 1) index++
@@ -77,6 +76,11 @@ class MainActivity : AppCompatActivity() {
     private fun main(){
         for (lugar in lugares)lugar.isOnPlace = false
         getLugarMasCercano()
+        if (!lugarMasCercano.isOnPlace) {
+            shouldAddModel = true
+            anchor?.detach()
+            index = 0
+        }
         updateLugaresRelativeLayout()
         updateGalleryLayout()
 
@@ -174,6 +178,7 @@ class MainActivity : AppCompatActivity() {
                 if ( shouldAddModel) {
                     if (index >= lugarMasCercano.sitiosInteres.size) index=0
                     if (lugarMasCercano.isOnPlace){
+                        toast("Cargando...")
                         anchor = augmentedImage.createAnchor(augmentedImage.getCenterPose())
                         placeObject(fragment,
                                 anchor!!,
@@ -182,9 +187,6 @@ class MainActivity : AppCompatActivity() {
                         updateLugaresRelativeLayout()
 
                     }else toast("Tarjeta Dectectada... Pero no estas en un sitio de interes")
-
-
-
                 }
             }
         }
@@ -207,13 +209,13 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
 
         location.detenerActualizacionUbicacion()
-
+        fragment.arSceneView.pause()
 
     }
 
     override fun onPause() {
         super.onPause()
-        fragment.arSceneView.pause()
+        //fragment.arSceneView.pause()
     }
 
 
