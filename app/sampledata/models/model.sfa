@@ -349,7 +349,7 @@
     file: 'sampledata/models/model.obj',
     name: 'model',
     recenter: 'root',
-    scale: 0.36900300000000003,
+    scale: 0.05,
   },
   version: '0.52:1',
 }

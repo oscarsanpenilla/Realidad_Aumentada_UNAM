@@ -37,7 +37,7 @@
     file: 'sampledata/models/Lighthouse singly.obj',
     name: 'Lighthouse singly',
     recenter: 'root',
-    scale: 0.099538000000000001,
+    scale: 0.02,
   },
   samplers: [
     {

@@ -37,7 +37,7 @@
     file: 'sampledata/models/Ballpark.obj',
     name: 'Ballpark',
     recenter: 'root',
-    scale: 0.082013000000000003,
+    scale: 0.005,
   },
   samplers: [
     {

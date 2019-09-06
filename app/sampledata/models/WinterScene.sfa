@@ -530,7 +530,7 @@
     file: 'sampledata/models/WinterScene.obj',
     name: 'WinterScene',
     recenter: 'root',
-    scale: 0.082127000000000006,
+    scale: 0.0075,
   },
   version: '0.52:1',
 }
